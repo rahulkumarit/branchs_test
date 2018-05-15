@@ -6,6 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -31,6 +35,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
     @Override
     public void onBindViewHolder(@NonNull CartHolder holder, int position) {
 
+        holder.btnRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "click onremove", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -40,12 +50,18 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartHolder> {
     }
 
     class CartHolder extends RecyclerView.ViewHolder {
-
+        private ImageView imgProduct;
+        private TextView txtProductName, txtPrice, txtQnt;
+        private Button btnRemove;
 
         public CartHolder(View itemView) {
             super(itemView);
+            imgProduct = itemView.findViewById(R.id.imgProduct);
+            txtProductName = itemView.findViewById(R.id.txtProductName);
+            txtPrice = itemView.findViewById(R.id.txtPrice);
+            txtQnt = itemView.findViewById(R.id.txtQnt);
+            btnRemove = itemView.findViewById(R.id.btnRemove);
         }
-
 
     }
 
