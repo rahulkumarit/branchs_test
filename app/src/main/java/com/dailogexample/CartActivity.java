@@ -7,8 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,6 +30,7 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<Item> items = new ArrayList<>();
     private ProgressBar progress;
     private Button btnContinue;
+    private TextView txtTestAdd;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,6 +39,8 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         rvCartList = findViewById(R.id.rvCartList);
         progress = findViewById(R.id.progress);
         btnContinue = findViewById(R.id.btnContinue);
+        txtTestAdd = findViewById(R.id.txtTestAdd);
+        txtTestAdd.setOnClickListener(this);
         btnContinue.setOnClickListener(this);
         prePareList();
     }
@@ -90,9 +97,19 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btnContinue:
                 clickOnContinue();
                 break;
+            case R.id.txtTestAdd:
+                clickTestAdd();
+                break;
             default:
                 break;
-        }
+           }
+    }
+
+    private void clickTestAdd() {
+        RotateAnimation rotate = new RotateAnimation(0, 180, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        rotate.setDuration(5000);
+        rotate.setInterpolator(new LinearInterpolator());
+        txtTestAdd.setAnimation(rotate);
     }
 
 }

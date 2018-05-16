@@ -4,15 +4,37 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
+     <ImageView
+        android:id="@+id/imgCart"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_shopping_cart_black_24dp" />
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/cart_text_bg"
+        android:gravity="center"
+        android:text="0"
+        android:textColor="@color/white" />
+
+     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvCartList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imgCart"
+        android:layout_marginTop="5dp">
     </android.support.v7.widget.RecyclerView>
 
 
     <TextView
+        android:id="@+id/txtTestAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
