@@ -23,8 +23,6 @@ public class DatePickerDailogActivity extends AppCompatActivity implements View.
     }
 
     private void initComponents() {
-        btn_start_date = findViewById(R.id.btn_start_date);
-        btn_end_date = findViewById(R.id.btn_end_date);
         btn_start_date.setOnClickListener(this);
         btn_end_date.setOnClickListener(this);
     }
@@ -32,12 +30,7 @@ public class DatePickerDailogActivity extends AppCompatActivity implements View.
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_start_date:
-                clickOnStratDate();
-                break;
-            case R.id.btn_end_date:
-                clickOnEndDate();
-                break;
+
             default:
                 break;
         }

@@ -1,25 +1,33 @@
 package com.dailogexample;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.app.DownloadManager;
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
+import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 public class DownloadActivity extends AppCompatActivity {
 
-    private EditText urlText;
-    private ProgressBar pd;
-    private ImageView imgView;
-    private String defaultUrl = "http://developer.android.com/assets/images/dac_logo.png";
-    private SampleResultReceiver sampleResultReceiver;
+
+    private DownloadManager downloadManager;
+    private long refid;
+    private Uri Download_Uri;
+    ArrayList<Long> list = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,45 +41,94 @@ public class DownloadActivity extends AppCompatActivity {
     }
 
     private void initComponents() {
-        sampleResultReceiver = new SampleResultReceiver(new Handler());
-        urlText = findViewById(R.id.urlText);
-        pd = findViewById(R.id.downloadPD);
-        imgView = findViewById(R.id.imgView);
-        urlText.setText(defaultUrl);
-     }
+        downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+        registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        Download_Uri = Uri.parse("http://www.gadgetsaint.com/wp-content/uploads/2016/11/cropped-web_hi_res_512.png");
+        TextView btnSingle = (TextView) findViewById(R.id.single);
+        TextView btnMultiple = (TextView) findViewById(R.id.multiple);
 
+        if (!isStoragePermissionGranted()) {
 
-    private class SampleResultReceiver extends ResultReceiver {
-
-        public SampleResultReceiver(Handler handler) {
-            super(handler);
         }
 
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-            switch (resultCode) {
-                case SampleIntentService.DOWNLOAD_ERROR:
-                    Toast.makeText(getApplicationContext(), "error in download", Toast.LENGTH_SHORT).show();
-                    pd.setVisibility(View.INVISIBLE);
-                    break;
-
-                case SampleIntentService.DOWNLOAD_SUCCESS:
-                    String filePath = resultData.getString("filePath");
-                    Bitmap bmp = BitmapFactory.decodeFile(filePath);
-                    if (imgView != null && bmp != null) {
-                        imgView.setImageBitmap(bmp);
-                        Toast.makeText(getApplicationContext(), "image download via IntentService is done",
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(),
-                                "error in decoding downloaded file",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                    pd.setIndeterminate(false);
-                    pd.setVisibility(View.INVISIBLE);
-                    break;
+        btnSingle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                list.clear();
+                DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
+                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+                request.setAllowedOverRoaming(false);
+                request.setTitle("GadgetSaint Downloading " + "Sample" + ".png");
+                request.setDescription("Downloading " + "Sample" + ".png");
+                request.setVisibleInDownloadsUi(true);
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "/GadgetSaint/" + "/" + "Sample" + ".png");
+                refid = downloadManager.enqueue(request);
+                Log.e("OUT", "" + refid);
+                list.add(refid);
             }
-            super.onReceiveResult(resultCode, resultData);
+        });
+
+        btnMultiple.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                list.clear();
+                for (int i = 0; i < 2; i++) {
+                    DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
+                    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+                    request.setAllowedOverRoaming(false);
+                    request.setTitle("GadgetSaint Downloading " + "Sample_" + i + ".png");
+                    request.setDescription("Downloading " + "Sample_" + i + ".png");
+                    request.setVisibleInDownloadsUi(true);
+                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "/DownloadSample/" + "/" + "Sample_" + i + ".png");
+                    refid = downloadManager.enqueue(request);
+                    Log.e("OUTNM", "" + refid);
+                    list.add(refid);
+                }
+            }
+        });
+    }
+
+    private boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                return true;
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+            return true;
+        }
+    }
+
+    BroadcastReceiver onComplete = new BroadcastReceiver() {
+        public void onReceive(Context ctxt, Intent intent) {
+            long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+            Log.e("IN", "" + referenceId);
+            list.remove(referenceId);
+            if (list.isEmpty()) {
+                Log.e("INSIDE", "" + referenceId);
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(DownloadActivity.this)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle("Download Completed")
+                        .setContentText("download Completed");
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.notify(455, mBuilder.build());
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(onComplete);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // permission granted
         }
     }
 
