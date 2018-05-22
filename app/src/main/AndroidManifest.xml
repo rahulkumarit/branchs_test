@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -33,10 +32,10 @@
         <activity
             android:name=".DownloadActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity
             android:name=".CartActivity"
@@ -44,6 +43,7 @@
         <activity
             android:name=".datetime.DatePickerDailogActivity"
             android:screenOrientation="portrait">
+
             <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -67,16 +67,24 @@
         <activity
             android:name=".main.TestActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".main.NavigationTestActivity"
             android:label="@string/title_activity_navigation_test"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+
+        <service
+            android:name=".services.MyService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <activity android:name=".services.ServiceAcivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
