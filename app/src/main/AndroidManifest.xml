@@ -31,27 +31,13 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".DownloadActivity"
-            android:screenOrientation="portrait">
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".CartActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".datetime.DatePickerDailogActivity"
-            android:screenOrientation="portrait">
-
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
-        </activity>
+            android:screenOrientation="portrait"></activity>
 
         <service android:name=".notification.MyFirebaseInstanceIDService">
             <intent-filter>
@@ -66,25 +52,37 @@
 
         <activity
             android:name=".main.TestActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".main.NavigationTestActivity"
             android:label="@string/title_activity_navigation_test"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme">
+        </activity>
 
         <service
             android:name=".services.MyService"
             android:enabled="true"
-            android:exported="true"></service>
-
-        <activity android:name=".services.ServiceAcivity">
+            android:exported="true" />
+        <activity android:name=".datepicker.DatePickerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".recievers.MyReceiver"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver android:name=".NewAppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/new_app_widget_info" />
+        </receiver>
     </application>
 
 </manifest>
