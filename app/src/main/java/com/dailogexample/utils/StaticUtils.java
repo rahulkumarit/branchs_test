@@ -67,7 +67,7 @@ public class StaticUtils {
 
         float dayCount = (float) diff / (24 * 60 * 60 * 1000);
 
-        return ("" + (int) dayCount + " Days");
+        return ("" + (int) dayCount);
     }
 
 

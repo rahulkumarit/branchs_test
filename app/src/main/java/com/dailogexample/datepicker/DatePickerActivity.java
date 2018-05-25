@@ -13,7 +13,10 @@ import android.widget.Toast;
 import com.dailogexample.R;
 import com.dailogexample.utils.StaticUtils;
 
+import org.joda.time.DateTime;
+
 import java.text.ParseException;
+import java.util.Date;
 
 public class DatePickerActivity extends AppCompatActivity implements View.OnClickListener {
     private Button btnFrom, btnToDate, btnCheckDate;
@@ -51,8 +54,15 @@ public class DatePickerActivity extends AppCompatActivity implements View.OnClic
     private void clickOnBtnCheck() {
         try {
             String daycal = StaticUtils.getCountOfDays(btnFrom.getText().toString().trim(), btnToDate.getText().toString().toString());
-            Toast.makeText(this, "Days: " + daycal, Toast.LENGTH_SHORT).show();
-            } catch (ParseException e) {
+            int noOfSelectedDay = Integer.parseInt(daycal);
+            Date dt = new Date();
+            DateTime dtOrg = new DateTime(dt);
+            for (int i = 0; i <= noOfSelectedDay; i++) {
+                DateTime dtPlusOne = dtOrg.plusDays(i);
+                Toast.makeText(this, "Date " + dtPlusOne.getYear() + "/" + dtPlusOne.getMonthOfYear() + "/" + dtPlusOne.getDayOfMonth(), Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (ParseException e) {
             e.printStackTrace();
             Toast.makeText(this, "Prasing error", Toast.LENGTH_SHORT).show();
         }
